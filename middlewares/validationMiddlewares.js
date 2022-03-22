@@ -15,6 +15,9 @@ const validateDisplayName = (displayName) => {
 const validateEmail = (email) => {
   const testEmail = /^[a-z0-9_.-]+@[a-z]+\.[a-z]{2,3}(?:\.[a-z]{2})?$/.test(email);
   
+  if (email === '') {
+    throwError('"email" is not allowed to be empty', 400);
+  }
   if (!email) {
     throwError('"email" is required', 400);
   }
@@ -23,7 +26,7 @@ const validateEmail = (email) => {
   }
 };
 
-const validateEmailList = async (email) => {
+const doesEmailExist = async (email) => {
   const emailList = await User.findAll({ where: {
       email,
   } });
@@ -32,7 +35,19 @@ const validateEmailList = async (email) => {
   }
 };
 
+const isEmailValid = async (email) => {
+  const emailList = await User.findAll({ where: {
+      email,
+  } });
+  if (emailList.length === 0) {
+    throwError('Invalid fields', 400);
+  }
+};
+
 const validatePassword = (password) => {
+  if (password === '') {
+    throwError('"password" is not allowed to be empty', 400);
+  }
   if (!password) {
     throwError('"password" is required', 400);
   }
@@ -49,6 +64,7 @@ module.exports = {
   validateDisplayName,
   validateEmail,
   validatePassword,
-  validateEmailList,
+  doesEmailExist,
+  isEmailValid,
   // validateToken,
 };

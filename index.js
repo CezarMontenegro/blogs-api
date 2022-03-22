@@ -1,6 +1,7 @@
 const express = require('express');
 const errorMiddleware = require('./middlewares/errorMiddleware');
 const userController = require('./controllers/userController');
+const loginController = require('./controllers/loginController');
 
 const app = express();
 app.use(express.json());
@@ -11,6 +12,7 @@ app.get('/', (request, response) => {
 });
 
 app.use('/user', userController);
+app.use('/login', loginController);
 app.use(errorMiddleware);
 
 app.listen(3000, () => console.log('ouvindo porta 3000!'));
