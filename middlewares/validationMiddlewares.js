@@ -75,6 +75,12 @@ const isIdValid = (id) => {
   return user;
 };
 
+const validateName = (name) => {
+  if (!name) {
+    throwError('"name" is required', 400);
+  }
+};
+
 module.exports = {
   throwError,
   validateDisplayName,
@@ -84,4 +90,5 @@ module.exports = {
   isEmailValid,
   validateToken,
   isIdValid,
+  validateName,
 };
