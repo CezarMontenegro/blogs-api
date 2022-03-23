@@ -12,6 +12,15 @@ const create = async (name, authorization) => {
   return result;
 };
 
+const getAll = async (authorization) => {
+  await validationMiddlewares.validateToken(authorization);
+
+  const result = Category.findAll();
+
+  return result;
+};
+
 module.exports = {
   create,
+  getAll,
 };

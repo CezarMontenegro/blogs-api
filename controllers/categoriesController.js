@@ -11,4 +11,12 @@ categories.post('/', rescue(async (req, res) => {
   res.status(201).json(result);
 }));
 
+categories.get('/', rescue(async (req, res) => {
+  const { authorization } = req.headers;
+
+  const result = await categoriesService.getAll(authorization);
+
+  res.status(200).json(result);
+}));
+
 module.exports = categories;
