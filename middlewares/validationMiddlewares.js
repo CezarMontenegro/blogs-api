@@ -69,11 +69,19 @@ const validateToken = (authorization) => {
   }
 };
 
+const isIdValid = (id) => {
+  const user = User.findByPk(id);
+
+  return user;
+};
+
 module.exports = {
+  throwError,
   validateDisplayName,
   validateEmail,
   validatePassword,
   doesEmailExist,
   isEmailValid,
   validateToken,
+  isIdValid,
 };

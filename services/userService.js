@@ -25,7 +25,20 @@ const getAll = async (authorization) => {
   return result;
 };
 
+const getById = async (authorization, id) => {
+  validationMiddlewares.validateToken(authorization);
+  
+  const result = await User.findByPk(id);
+
+  if (!result) {
+    validationMiddlewares.throwError('User does not exist', 404);
+  }
+
+  return result;
+};
+
 module.exports = {
   create,
   getAll,
+  getById,
 };

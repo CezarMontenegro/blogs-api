@@ -19,9 +19,13 @@ user.get('/', rescue(async (req, res) => {
   res.status(200).json(result);
 }));
 
-// user.get('/:id', rescue(async (req, res) => {
-//   const { authorization } = req.headers;
+user.get('/:id', rescue(async (req, res) => {
+  const { authorization } = req.headers;
+  const { id } = req.params;
 
-// }));
+  const result = await userService.getById(authorization, id);
+
+  res.status(200).json(result);
+}));
 
 module.exports = user;
