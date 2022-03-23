@@ -19,4 +19,9 @@ user.get('/', rescue(async (req, res) => {
   res.status(200).json(result);
 }));
 
+// user.get('/:id', rescue(async (req, res) => {
+//   const { authorization } = req.headers;
+
+// }));
+
 module.exports = user;
