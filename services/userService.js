@@ -2,10 +2,6 @@ const validationMiddlewares = require('../middlewares/validationMiddlewares');
 const { User } = require('../models');
 const tokenGenerate = require('../helpers/jwtGenerator');
 
-// const getAll = async () => {
-//   await User.findAll
-// }
-
 const create = async (data) => {
   const { displayName, email, password } = data;
 
@@ -21,6 +17,15 @@ const create = async (data) => {
   return token;
 };
 
+const getAll = async (authorization) => {
+  validationMiddlewares.validateToken(authorization);
+  
+  const result = await User.findAll();
+
+  return result;
+};
+
 module.exports = {
   create,
+  getAll,
 };

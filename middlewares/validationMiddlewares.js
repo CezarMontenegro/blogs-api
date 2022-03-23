@@ -1,3 +1,4 @@
+const jwt = require('jsonwebtoken');
 const { User } = require('../models');
 
 const throwError = (message, status) => {
@@ -56,9 +57,17 @@ const validatePassword = (password) => {
   }
 };
 
-// const validateToken = (token) => {
+const validateToken = (authorization) => {
+  if (!authorization) {
+    throwError('Token not found', 401);
+  }
 
-// }
+  try {
+    jwt.verify(authorization, process.env.JWT_SECRET);
+  } catch (e) {
+    throwError('Expired or invalid token', 401);
+  }
+};
 
 module.exports = {
   validateDisplayName,
@@ -66,5 +75,5 @@ module.exports = {
   validatePassword,
   doesEmailExist,
   isEmailValid,
-  // validateToken,
+  validateToken,
 };

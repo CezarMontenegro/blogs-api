@@ -1,7 +1,13 @@
 const jwt = require('jsonwebtoken');
 
 const config = {
-  expiresIn: '365d',
+  expiresIn: '1d',
+  algorithm: 'HS256',
 };
 
-module.exports = (data) => jwt.sign(data, process.env.JWT_SECRET, config);
+const generateToken = (data) => {
+  const token = jwt.sign(data, process.env.JWT_SECRET, config);
+  return token;
+};
+
+module.exports = generateToken;

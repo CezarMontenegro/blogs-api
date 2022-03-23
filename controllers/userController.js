@@ -11,4 +11,12 @@ user.post('/', rescue(async (req, res) => {
   res.status(201).json(token);
 }));
 
+user.get('/', rescue(async (req, res) => {
+  const { authorization } = req.headers;
+
+  const result = await userService.getAll(authorization);
+
+  res.status(200).json(result);
+}));
+
 module.exports = user;

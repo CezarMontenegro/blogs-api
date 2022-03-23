@@ -8,7 +8,7 @@ login.post('/', rescue(async (req, res) => {
 
   const token = await loginService.create(data);
 
-  return res.status(200).json(token);
+  return res.status(200).json({ token });
 }));
 
 module.exports = login;
