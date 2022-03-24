@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken');
-const { User } = require('../models');
+const { User, Category } = require('../models');
 
 const throwError = (message, status) => {
   const err = new Error(message);
@@ -81,6 +81,33 @@ const validateName = (name) => {
   }
 };
 
+const validateTitle = (title) => {
+  if (!title) {
+    throwError('"title" is required', 400);
+  }
+};
+
+const validateContent = (content) => {
+  if (!content) {
+    throwError('"content" is required', 400);
+  }
+};
+
+const validateCategoryId = async (categoryIds) => {
+  if (!categoryIds) {
+    throwError('"categoryIds" is required', 400);
+  }
+
+  const categories = await Category.findAll();
+  const categoriesArray = categories.map((category) => category.dataValues.id);
+  
+  categoryIds.forEach((category) => {
+    if (!categoriesArray.includes(category)) {
+      throwError('"categoryIds" not found', 400);
+    }
+  });
+};
+
 module.exports = {
   throwError,
   validateDisplayName,
@@ -91,4 +118,7 @@ module.exports = {
   validateToken,
   isIdValid,
   validateName,
+  validateTitle,
+  validateContent,
+  validateCategoryId,
 };

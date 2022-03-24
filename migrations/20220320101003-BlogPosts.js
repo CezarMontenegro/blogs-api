@@ -16,13 +16,13 @@ module.exports = {
       },
       userId: {
         type: Sequelize.INTEGER,
-        foreignKey: true,
-        references: {
-          model: 'Users',
-          key: 'id'
-        },
-        onUpdate: 'CASCADE',
-        onDelete: 'CASCADE'
+        // foreignKey: true,
+      //   references: {
+      //     model: 'Users',
+      //     key: 'id'
+      //   },
+      //   onUpdate: 'CASCADE',
+      //   onDelete: 'CASCADE'
       },
       published: {
         allowNull: false,
@@ -34,7 +34,7 @@ module.exports = {
       }
     });
   },
-  down: async (queryInterface, Sequelize) => {
+  down: async (queryInterface, _Sequelize) => {
     await queryInterface.dropTable('BlogPosts');
   }
 };
