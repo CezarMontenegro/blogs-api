@@ -130,6 +130,15 @@ const doesPostIdExist = async (id) => {
   }
 };
 
+const getUserId = async (authorization) => {
+  const decoded = jwt.verify(authorization, process.env.JWT_SECRET);
+  const { email } = decoded;
+  const id = await User.findOne({ where: { email } });
+  const userId = id.dataValues.id;
+
+  return userId;
+};
+
 module.exports = {
   throwError,
   validateDisplayName,
@@ -145,4 +154,5 @@ module.exports = {
   validateCategoryId,
   validateIdLogado,
   doesPostIdExist,
+  getUserId,
 };
