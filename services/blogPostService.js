@@ -5,7 +5,7 @@ const validationMiddlewares = require('../middlewares/validationMiddlewares');
 const create = async (authorization, data) => {
   const { title, content, categoryIds } = data;
  
-  // await validationMiddlewares.validateToken(authorization);
+  await validationMiddlewares.validateToken(authorization);
   validationMiddlewares.validateTitle(title);
   validationMiddlewares.validateContent(content);
   await validationMiddlewares.validateCategoryId(categoryIds);
@@ -30,17 +30,19 @@ const create = async (authorization, data) => {
 const getAll = async (authorization) => {
   await validationMiddlewares.validateToken(authorization);
 
-  return BlogPost.findAll({ include: [{
+  const result = BlogPost.findAll({ include: [{
     model: User,
     as: 'user',
     attributes: { exclude: 'password' },
-}, {
+  }, {
     model: Category,
     as: 'categories',
     through: {
         attributes: [],
     },
 }] });
+
+  return result;
 };
 
 module.exports = {
