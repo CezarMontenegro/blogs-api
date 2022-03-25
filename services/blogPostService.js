@@ -88,7 +88,6 @@ const destroy = async (authorization, id) => {
   await validationMiddlewares.validateToken(authorization);
   await validationMiddlewares.doesPostIdExist(id);
   await validationMiddlewares.validateIdLogado(authorization, id);
-  console.log('Estou aqui');
   await BlogPost.destroy({ where: { id } });
 };
 

@@ -113,16 +113,13 @@ const validateIdLogado = async (authorization, id) => {
   const { email } = decoded;
   const userData = await User.findOne({ where: { email } });
   const idLogado = userData.dataValues.id;
-  console.log(idLogado);
 
   const postId = await BlogPost.findByPk(id);
   const { userId } = postId.dataValues;
-  console.log(userId);
 
   if (idLogado !== userId) {
     throwError('Unauthorized user', 401);
   }
-  console.log('xablau');
 };
 
 const doesPostIdExist = async (id) => {
