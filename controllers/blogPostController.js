@@ -29,4 +29,14 @@ post.get('/:id', rescue(async (req, res) => {
   res.status(200).json(result);
 }));
 
+post.put('/:id', rescue(async (req, res) => {
+  const { authorization } = req.headers;
+  const { id } = req.params;
+  const { title, content, categoryIds } = req.body;
+
+  const result = await blogPostService.update(authorization, id, title, content, categoryIds);
+
+  res.status(200).json(result);  
+}));
+
 module.exports = post;

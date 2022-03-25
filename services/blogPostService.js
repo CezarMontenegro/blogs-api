@@ -1,4 +1,3 @@
-const jwt = require('jsonwebtoken');
 const { BlogPost, User, Category } = require('../models');
 const validationMiddlewares = require('../middlewares/validationMiddlewares');
 
@@ -10,10 +9,8 @@ const create = async (authorization, data) => {
   validationMiddlewares.validateContent(content);
   await validationMiddlewares.validateCategoryId(categoryIds);
 
-  const decoded = jwt.verify(authorization, process.env.JWT_SECRET);
-  const { email } = decoded;
-  const id = await User.findOne({ where: { email } });
-  const userId = id.dataValues.id;
+  const userId = await validationMiddlewares.getUserId(authorization);
+
   const published = new Date().getTime();
   const updated = new Date().getTime();
   
@@ -68,8 +65,35 @@ const getById = async (authorization, id) => {
   return result[0];
 };
 
+const update = async (authorization, id, title, content, categoryIds) => {
+  await validationMiddlewares.validateToken(authorization);
+  validationMiddlewares.validateTitle(title);
+  validationMiddlewares.validateContent(content);
+
+  if (categoryIds) {
+    validationMiddlewares.throwError('Categories cannot be edited', 400);
+  }
+
+  const userId = await validationMiddlewares.getUserId(authorization);
+
+  if (userId !== Number(id)) {
+    validationMiddlewares.throwError('Unauthorized user', 401);
+  }
+
+  await BlogPost.update({ title, content }, { where: { id } });
+  
+  const result = await BlogPost.findAll({ where: { id },
+    attributes: { exclude: ['id'] },
+    include: {
+      model: Category, as: 'categories', through: { attributes: [] },
+    } });
+        
+  return result[0];
+};
+
 module.exports = {
   create,
   getAll,
   getById,
+  update,
 };

@@ -14,7 +14,7 @@ const validateDisplayName = (displayName) => {
 };
 
 const validateEmail = (email) => {
-  const testEmail = /^[a-z0-9_.-]+@[a-z]+\.[a-z]{2,3}(?:\.[a-z]{2})?$/.test(email);
+  const testEmail = /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/.test(email);
   
   if (email === '') {
     throwError('"email" is not allowed to be empty', 400);
@@ -108,6 +108,15 @@ const validateCategoryId = async (categoryIds) => {
   });
 };
 
+const getUserId = async (authorization) => {
+  const decoded = jwt.verify(authorization, process.env.JWT_SECRET);
+  const { email } = decoded;
+  const id = await User.findOne({ where: { email } });
+  const userId = id.dataValues.id;
+
+  return userId;
+};
+
 module.exports = {
   throwError,
   validateDisplayName,
@@ -121,4 +130,5 @@ module.exports = {
   validateTitle,
   validateContent,
   validateCategoryId,
+  getUserId,
 };
