@@ -65,7 +65,9 @@ const getById = async (authorization, id) => {
   return result[0];
 };
 
-const update = async (authorization, id, title, content, categoryIds) => {
+const update = async (data) => {
+  const { authorization, id, title, content, categoryIds } = data;
+
   await validationMiddlewares.validateToken(authorization);
   validationMiddlewares.validateTitle(title);
   validationMiddlewares.validateContent(content);

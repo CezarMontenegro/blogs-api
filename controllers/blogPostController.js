@@ -34,7 +34,9 @@ post.put('/:id', rescue(async (req, res) => {
   const { id } = req.params;
   const { title, content, categoryIds } = req.body;
 
-  const result = await blogPostService.update(authorization, id, title, content, categoryIds);
+  const data = { authorization, id, title, content, categoryIds };
+
+  const result = await blogPostService.update(data);
 
   res.status(200).json(result);  
 }));
