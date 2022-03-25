@@ -1,7 +1,6 @@
 const validationMiddlewares = require('../middlewares/validationMiddlewares');
 const { User } = require('../models');
 const tokenGenerate = require('../helpers/jwtGenerator');
-const user = require('../controllers/userController');
 
 const create = async (data) => {
   const { displayName, email, password } = data;
