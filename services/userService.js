@@ -1,6 +1,7 @@
 const validationMiddlewares = require('../middlewares/validationMiddlewares');
 const { User } = require('../models');
 const tokenGenerate = require('../helpers/jwtGenerator');
+const user = require('../controllers/userController');
 
 const create = async (data) => {
   const { displayName, email, password } = data;
@@ -37,8 +38,15 @@ const getById = async (authorization, id) => {
   return result;
 };
 
+const destroyMe = async (authorization) => {
+  await validationMiddlewares.validateToken(authorization);
+  const userId = await validationMiddlewares.getUserId(authorization);
+    await User.destroy({ where: { id: userId } });
+};
+
 module.exports = {
   create,
   getAll,
   getById,
+  destroyMe,
 };

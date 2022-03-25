@@ -28,4 +28,12 @@ user.get('/:id', rescue(async (req, res) => {
   res.status(200).json(result);
 }));
 
+user.delete('/me', rescue(async (req, res) => {
+  const { authorization } = req.headers;
+
+  await userService.destroyMe(authorization);
+
+  res.status(204).end();
+}));
+
 module.exports = user;
