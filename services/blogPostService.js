@@ -13,7 +13,6 @@ const create = async (authorization, data) => {
   const decoded = jwt.verify(authorization, process.env.JWT_SECRET);
   const { email } = decoded;
   const id = await User.findOne({ where: { email } });
-  console.log(id);
   const userId = id.dataValues.id;
   const published = new Date().getTime();
   const updated = new Date().getTime();
@@ -45,7 +44,32 @@ const getAll = async (authorization) => {
   return result;
 };
 
+const getById = async (authorization, id) => {
+  await validationMiddlewares.validateToken(authorization);
+
+  const test = await BlogPost.findByPk(id);
+
+  if (!test) validationMiddlewares.throwError('Post does not exist', 404);
+  
+  const result = await BlogPost.findAll({ where: { id },
+    include: [{
+        model: User,
+        as: 'user',
+        attributes: { exclude: 'password' },
+    }, {
+        model: Category,
+        as: 'categories',
+        through: {
+            attributes: [],
+        },
+    }],
+});
+
+  return result[0];
+};
+
 module.exports = {
   create,
   getAll,
+  getById,
 };

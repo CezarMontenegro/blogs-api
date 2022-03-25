@@ -69,11 +69,11 @@ const validateToken = (authorization) => {
   }
 };
 
-const isIdValid = (id) => {
-  const user = User.findByPk(id);
+// const isIdValid = (id) => {
+//   const user = User.findByPk(id);
 
-  return user;
-};
+//   return user;
+// };
 
 const validateName = (name) => {
   if (!name) {
@@ -116,7 +116,7 @@ module.exports = {
   doesEmailExist,
   isEmailValid,
   validateToken,
-  isIdValid,
+  // isIdValid,
   validateName,
   validateTitle,
   validateContent,

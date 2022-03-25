@@ -20,4 +20,13 @@ post.get('/', rescue(async (req, res) => {
   res.status(200).json(result);
 }));
 
+post.get('/:id', rescue(async (req, res) => {
+  const { authorization } = req.headers;
+  const { id } = req.params;
+
+  const result = await blogPostService.getById(authorization, id);
+
+  res.status(200).json(result);
+}));
+
 module.exports = post;
