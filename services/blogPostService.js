@@ -1,11 +1,11 @@
 const jwt = require('jsonwebtoken');
-const { BlogPost, User } = require('../models');
+const { BlogPost, User, Category } = require('../models');
 const validationMiddlewares = require('../middlewares/validationMiddlewares');
 
 const create = async (authorization, data) => {
   const { title, content, categoryIds } = data;
  
-  await validationMiddlewares.validateToken(authorization);
+  // await validationMiddlewares.validateToken(authorization);
   validationMiddlewares.validateTitle(title);
   validationMiddlewares.validateContent(content);
   await validationMiddlewares.validateCategoryId(categoryIds);
@@ -15,7 +15,6 @@ const create = async (authorization, data) => {
   const id = await User.findOne({ where: { email } });
   console.log(id);
   const userId = id.dataValues.id;
-  console.log(userId);
   const published = new Date().getTime();
   const updated = new Date().getTime();
   
@@ -28,6 +27,23 @@ const create = async (authorization, data) => {
   return result;
 };
 
+const getAll = async (authorization) => {
+  await validationMiddlewares.validateToken(authorization);
+
+  return BlogPost.findAll({ include: [{
+    model: User,
+    as: 'user',
+    attributes: { exclude: 'password' },
+}, {
+    model: Category,
+    as: 'categories',
+    through: {
+        attributes: [],
+    },
+}] });
+};
+
 module.exports = {
   create,
+  getAll,
 };
