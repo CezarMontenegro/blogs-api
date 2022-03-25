@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken');
-const { User, Category } = require('../models');
+const { User, Category, BlogPost } = require('../models');
 
 const throwError = (message, status) => {
   const err = new Error(message);
@@ -108,13 +108,29 @@ const validateCategoryId = async (categoryIds) => {
   });
 };
 
-const getUserId = async (authorization) => {
+const validateIdLogado = async (authorization, id) => {
   const decoded = jwt.verify(authorization, process.env.JWT_SECRET);
   const { email } = decoded;
-  const id = await User.findOne({ where: { email } });
-  const userId = id.dataValues.id;
+  const userData = await User.findOne({ where: { email } });
+  const idLogado = userData.dataValues.id;
+  console.log(idLogado);
 
-  return userId;
+  const postId = await BlogPost.findByPk(id);
+  const { userId } = postId.dataValues;
+  console.log(userId);
+
+  if (idLogado !== userId) {
+    throwError('Unauthorized user', 401);
+  }
+  console.log('xablau');
+};
+
+const doesPostIdExist = async (id) => {
+  const test = await BlogPost.findByPk(id);
+
+  if (!test) {
+    throwError('Post does not exist', 404);
+  }
 };
 
 module.exports = {
@@ -130,5 +146,6 @@ module.exports = {
   validateTitle,
   validateContent,
   validateCategoryId,
-  getUserId,
+  validateIdLogado,
+  doesPostIdExist,
 };

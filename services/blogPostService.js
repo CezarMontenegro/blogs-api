@@ -43,11 +43,7 @@ const getAll = async (authorization) => {
 
 const getById = async (authorization, id) => {
   await validationMiddlewares.validateToken(authorization);
-
-  const test = await BlogPost.findByPk(id);
-
-  if (!test) validationMiddlewares.throwError('Post does not exist', 404);
-  
+  await validationMiddlewares.doesPostIdExist(id);  
   const result = await BlogPost.findAll({ where: { id },
     include: [{
         model: User,
@@ -71,15 +67,10 @@ const update = async (data) => {
   await validationMiddlewares.validateToken(authorization);
   validationMiddlewares.validateTitle(title);
   validationMiddlewares.validateContent(content);
+  await validationMiddlewares.validateIdLogado(authorization, id);
 
   if (categoryIds) {
     validationMiddlewares.throwError('Categories cannot be edited', 400);
-  }
-
-  const userId = await validationMiddlewares.getUserId(authorization);
-
-  if (userId !== Number(id)) {
-    validationMiddlewares.throwError('Unauthorized user', 401);
   }
 
   await BlogPost.update({ title, content }, { where: { id } });
@@ -93,9 +84,18 @@ const update = async (data) => {
   return result[0];
 };
 
+const destroy = async (authorization, id) => {
+  await validationMiddlewares.validateToken(authorization);
+  await validationMiddlewares.doesPostIdExist(id);
+  await validationMiddlewares.validateIdLogado(authorization, id);
+  console.log('Estou aqui');
+  await BlogPost.destroy({ where: { id } });
+};
+
 module.exports = {
   create,
   getAll,
   getById,
   update,
+  destroy,
 };

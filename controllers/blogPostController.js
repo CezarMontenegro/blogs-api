@@ -41,4 +41,13 @@ post.put('/:id', rescue(async (req, res) => {
   res.status(200).json(result);  
 }));
 
+post.delete('/:id', rescue(async (req, res) => {
+  const { authorization } = req.headers;
+  const { id } = req.params;
+  
+  await blogPostService.destroy(authorization, id);
+
+  res.status(204).end();
+}));
+
 module.exports = post;
